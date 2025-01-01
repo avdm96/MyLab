@@ -33,6 +33,10 @@ environment{
         //Stage3 : Publish the artifacts to Nexus
         stage ('Publish to Nexus'){
             steps {
+                script {
+
+                def NexusRepo = Version.endsWith("SNAPSHOT") ? "AntoniosDevOpsLab-SNAPSHOT" : "AntoniosDevOpsLab-RELEASE"
+                
                 nexusArtifactUploader artifacts: 
                 [[artifactId: "${ArtifactId}", 
                 classifier: '', 
@@ -43,9 +47,9 @@ environment{
                 nexusUrl: '172.20.10.117:8081', 
                 nexusVersion: 'nexus3', 
                 protocol: 'http', 
-                repository: "AntoniosDevOpsLab-SNAPSHOT", 
+                repository: "${NexusRepo}", 
                 version: "${Version}"
-
+                }
             }
         }
 		
