@@ -33,22 +33,24 @@ environment{
         //Stage3 : Publish the artifacts to Nexus
         stage ('Publish to Nexus'){
             steps {
-                script {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    script {
 
-                def NexusRepo = Version.endsWith("SNAPSHOT") ? "AntoniosDevOpsLab-SNAPSHOT" : "AntoniosDevOpsLab-RELEASE"
+                    def NexusRepo = Version.endsWith("SNAPSHOT") ? "AntoniosDevOpsLab-SNAPSHOT" : "AntoniosDevOpsLab-RELEASE"
                 
-                nexusArtifactUploader artifacts: 
-                [[artifactId: "${ArtifactId}", 
-                classifier: '', 
-                file: "target/${ArtifactId}-${Version}.war", 
-                type: 'war']], 
-                credentialsId: '66ed4f6e-f20d-471b-95eb-c82864178942', 
-                groupId: "${GroupId}", 
-                nexusUrl: '172.20.10.117:8081', 
-                nexusVersion: 'nexus3', 
-                protocol: 'http', 
-                repository: "${NexusRepo}", 
-                version: "${Version}"
+                    nexusArtifactUploader artifacts: 
+                    [[artifactId: "${ArtifactId}", 
+                    classifier: '', 
+                    file: "target/${ArtifactId}-${Version}.war", 
+                    type: 'war']], 
+                    credentialsId: '66ed4f6e-f20d-471b-95eb-c82864178942', 
+                    groupId: "${GroupId}", 
+                    nexusUrl: '172.20.10.117:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: "${NexusRepo}", 
+                    version: "${Version}"
+                    }
                 }
             }
         }
